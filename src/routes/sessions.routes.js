@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { logoutUserCtrl, loginUserCookieCtrl, currentUserCtrl } from "../controllers/users.controller.js";
+import { logoutUserCtrl, loginUserCookieCtrl, currentUserCtrl, forgotPasswordCtrl, updatePasswordCtrl } from "../controllers/users.controller.js";
 
 const router = Router();
 
@@ -33,5 +33,11 @@ router.get(
 }), loginUserCookieCtrl);
 
 router.get("/current", passport.authenticate("jwt", { session: false }), currentUserCtrl)
+
+router.put("/resetPassword", forgotPasswordCtrl)
+
+router.put("/updatePassword/:token", updatePasswordCtrl)
+
+
 
 export default router;

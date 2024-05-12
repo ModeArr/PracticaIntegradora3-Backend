@@ -1,5 +1,7 @@
-import { JWT_SECRET } from "../config/config.js";
+import { JWT_SECRET, RESET_PASSWORD_KEY, RESET_EXPIRE_IN, CLIENT_URL } from "../config/config.js";
 import jsonwebtoken from "jsonwebtoken";
+import { userService } from "../repository/index.js";
+import { transporter } from "../utils/email.js"
 
 const secret = JWT_SECRET
 
@@ -35,8 +37,82 @@ const loginUserCookieCtrl = async(req, res) => {
       })
   }
 
+  const forgotPasswordCtrl = async(req,res) => {
+    const email = req.query.email
+
+    userService.checkUserEmail(email)
+    .then( user => {
+      if (!user){
+        return res.status(400).json({status: "error", message: "El usuario con ese correo no existe"});
+      }
+
+      let token = jsonwebtoken.sign(
+        user,
+        RESET_PASSWORD_KEY,
+        { expiresIn: RESET_EXPIRE_IN })
+  
+      const data = {
+        to: email,
+        subject: 'Reset Account Password Link',
+        html: `
+        <h3>Please click the link below to reset your password</h3>
+        <p>${CLIENT_URL}/updatePassword/${token}</p>
+        `,
+      }
+      
+      return setResetLink(user._id, token)
+      .then(user => {
+        transporter.sendMail(data, function(error, body) {
+          if (error) {
+            return res.status(400).json({error: error.message})
+          }
+          return res.status(200).json({message: 'El correo fue enviado sigue las instrucciones'})
+        })
+      })
+      .catch(err => {
+        res.status(400).json({status: "error", message: err.message});
+      });
+
+    })
+    .catch(err => {
+      res.status(400).json({status: "error", message: err.message});
+  });
+
+  }
+
+  const updatePasswordCtrl  = async(req,res) => {
+    const token = req.params.token
+    const { password } = req.body
+
+    if (token) {
+      jwt.verify(token, RESET_PASSWORD_KEY, function(error, decodedData) {
+        if (error) {
+          return res.status(400).json({error: 'Token incorrecta o expirada'})
+        }
+
+      userService.changeUserPassword(token, password)
+      .then(user => {
+        if (!user){
+          res.status(400).json({status: "error", message: "No hay usuario con esa token"})
+        }
+        return res.status(200).json({message: 'Tu contrase;na fue guardad cambiada con exito'})
+      })
+      .catch(err => {
+        res.status(400).json({status: "error", message: err.message});
+      });
+
+      })
+    } else {
+      return res.status(401).json({error: "Authentication Error"})
+    }
+
+
+  }
+
 export {
     logoutUserCtrl,
     loginUserCookieCtrl,
-    currentUserCtrl
+    currentUserCtrl,
+    forgotPasswordCtrl,
+    updatePasswordCtrl
 }

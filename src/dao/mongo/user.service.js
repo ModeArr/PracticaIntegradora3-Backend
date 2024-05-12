@@ -87,6 +87,55 @@ class UserManagerService {
         }  
     }
 
+    async changeUserPassword(token, newPass){
+        try {
+            const newHashedPass = await createHash(newPass)
+
+            return await userModels.findOneAndUpdate({resetLink: token}, {password: newHashedPass})
+            .then((res) => {
+                return res
+            })
+            .catch((err) => {
+                throw new Error(err)
+            })
+        } catch (error) {
+            throw Error(error)
+        }
+    }
+
+    async setResetLink(uid, token) {
+        try {
+            return await userModels.findByIdAndUpdate(uid, {resetLink: token})
+            .then((res) => {
+                return res
+            })
+            .catch((err) => {
+                throw new Error(err)
+            })
+
+        } catch (error) {
+            throw Error(error) 
+        }
+    }
+
+    async checkResetLink(token){
+        try {
+            return userModels.findOne({ resetLink: token }).lean
+        } catch (error) {
+            throw Error(error) 
+        }
+    }
+
+    async checkUserEmail(email) {
+        try {
+
+            return await userModels.findOne({ email }).lean()
+
+        } catch (error) {
+            throw Error(error)
+        }  
+    }
+
 }
 
 export default UserManagerService

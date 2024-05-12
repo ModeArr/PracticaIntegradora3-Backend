@@ -6,6 +6,7 @@ const roleType = {
   USER: 'USER',
   ADMIN: 'ADMIN',
   PUBLIC: 'PUBLIC',
+  PREMIUM: 'PREMIUM',
 }
 
 const userSchema = new Schema({
@@ -28,6 +29,10 @@ const userSchema = new Schema({
     enum: Object.values(roleType),
     default: 'USER'
   },
+  resetLink: {
+    type: String, 
+    default: ''
+  }
 });
 
 userSchema.pre('findOne', function () {

@@ -19,4 +19,21 @@ export default class UserRepository {
     checkUser = async (email) => {
         return this.dao.checkUser(email)
     }
+
+    changeUserPassword = async (token, newPass) => {
+        return this.dao.changeUserPassword(token, newPass)
+    }
+
+    setResetLink = async (uid, token) => {
+        return this.dao.setResetLink(uid, token)
+    }
+
+    checkResetLink = async (token) => {
+        return this.dao.checkResetLink(token)
+    }
+
+    checkUserEmail = async (email) => {
+        return this.dao.checkUserEmail(email)
+    }
+
 }

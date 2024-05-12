@@ -8,11 +8,11 @@
 
 #### Profesor: Rabindranath Ferreira Villamizar
 
-#### Tutor: Tomás Alessandro Yovino
+#### Tutor: Allan Reynoso Naranjo
 
-#### Desafio 1 Modulo 2 Implementacion de Login
+#### Practica Integradora Proyecto Final Numero 3
 
-#### El proyecto de integración de Login pide implementar un simple login con sistema de roles simple, esto apra aprender como funcionan las sessions en express asi como los middalewares para crear una logica de Login
+#### El proyecto de integración numero 3 pide hacer un sistema de reset de contrase;na mediante email asi como la crear la logia de un usuer premium el cual peude crear articulos y que solo el admin puede borrarlos
 
 ---
 ## Links de vistas
