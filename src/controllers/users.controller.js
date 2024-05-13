@@ -55,7 +55,7 @@ const loginUserCookieCtrl = async(req, res) => {
         subject: 'Reset Account Password Link',
         html: `
         <h3>Por favor, ingresa al link para cambiar tu contrasena</h3>
-        <p>${CLIENT_URL}/updatePassword/?token="${token}"</p>
+        <p>${CLIENT_URL}/updatePassword/${token}"</p>
         `,
       }
       
@@ -80,10 +80,11 @@ const loginUserCookieCtrl = async(req, res) => {
   }
 
   const updatePasswordCtrl  = async(req,res) => {
-    const { password, token } = req.body
+    const token = req.params.token
+    const { password } = req.body
 
     if (token) {
-      jwt.verify(token, RESET_PASSWORD_KEY, function(error, decodedData) {
+      jsonwebtoken.verify(token, RESET_PASSWORD_KEY, function(error, decodedData) {
         if (error) {
           return res.status(400).json({error: 'Token incorrecta o expirada'})
         }

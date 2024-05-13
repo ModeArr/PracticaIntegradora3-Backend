@@ -167,9 +167,11 @@ router.get('/forgotpassword', loggedRedirect, (req, res) => {
     })
 })
 
-router.get('/updatepassword', loggedRedirect, (req, res) => {
-    res.render("/updatepassword", {
-        title: "Practica Integradora 3 - Actualizar contrasena"
+router.get('/updatepassword/:token', loggedRedirect, (req, res) => {
+    const token = req.params.token
+    res.render("updatepassword", {
+        title: "Practica Integradora 3 - Actualizar contrasena",
+        token: token
     })
 })
 
