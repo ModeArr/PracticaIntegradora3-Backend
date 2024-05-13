@@ -38,8 +38,7 @@ const loginUserCookieCtrl = async(req, res) => {
   }
 
   const forgotPasswordCtrl = async(req,res) => {
-    const email = req.query.email
-
+    const { email } = req.body
     userService.checkUserEmail(email)
     .then( user => {
       if (!user){
@@ -55,12 +54,12 @@ const loginUserCookieCtrl = async(req, res) => {
         to: email,
         subject: 'Reset Account Password Link',
         html: `
-        <h3>Please click the link below to reset your password</h3>
-        <p>${CLIENT_URL}/updatePassword/${token}</p>
+        <h3>Por favor, ingresa al link para cambiar tu contrasena</h3>
+        <p>${CLIENT_URL}/updatePassword/?token="${token}"</p>
         `,
       }
       
-      return setResetLink(user._id, token)
+      return userService.setResetLink(user._id, token)
       .then(user => {
         transporter.sendMail(data, function(error, body) {
           if (error) {
@@ -81,8 +80,7 @@ const loginUserCookieCtrl = async(req, res) => {
   }
 
   const updatePasswordCtrl  = async(req,res) => {
-    const token = req.params.token
-    const { password } = req.body
+    const { password, token } = req.body
 
     if (token) {
       jwt.verify(token, RESET_PASSWORD_KEY, function(error, decodedData) {
@@ -95,7 +93,7 @@ const loginUserCookieCtrl = async(req, res) => {
         if (!user){
           res.status(400).json({status: "error", message: "No hay usuario con esa token"})
         }
-        return res.status(200).json({message: 'Tu contrase;na fue guardad cambiada con exito'})
+        return res.status(200).json({message: 'Tu contrasena fue guardad cambiada con exito'})
       })
       .catch(err => {
         res.status(400).json({status: "error", message: err.message});

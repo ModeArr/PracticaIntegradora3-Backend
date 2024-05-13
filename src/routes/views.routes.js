@@ -29,7 +29,7 @@ router.get('/', authMdwFront, (req, res) => {
 
     products.getProducts(page, limit, sort, query, url).then(result => {
         res.render("index", {
-            title: "Desafio 1 Modulo 2",
+            title: "Practica Integradora 3",
             products: result.payload,
             nextPage: result.nextLink,
             prevPage: result.prevLink,
@@ -61,7 +61,7 @@ router.get('/realtimeproducts', authMdwFront, (req, res) => {
 
     products.getProducts(page, limit, sort, query, url).then(result => {
         res.render("realtimeproducts", {
-            title: "Desafio 1 Modulo 2 - Productos en tiempo real",
+            title: "Practica Integradora 3 - Productos en tiempo real",
             products: result.payload,
             nextPage: result.nextLink,
             prevPage: result.prevLink,
@@ -77,7 +77,7 @@ router.get('/chat', (req, res) => {
 
     messages.getAllMessages().then(result => {
         res.render("chat", {
-            title: "Desafio 1 Modulo 2 - Chat en tiempo real",
+            title: "Practica Integradora 3 - Chat en tiempo real",
             messages: result
         })
     }).catch(err => {
@@ -105,7 +105,7 @@ router.get('/products', authMdwFront, (req, res) => {
 
     products.getProducts(page, limit, sort, query, url).then(result => {
         res.render("products", {
-            title: "Desafio 1 Modulo 2",
+            title: "Practica Integradora 3",
             products: result.payload,
             nextPage: result.nextLink,
             prevPage: result.prevLink,
@@ -123,7 +123,7 @@ router.get('/carts/:cid', authMdwFront, (req, res) => {
 
     cart.getCartProducts(idCart).then(result => {
         res.render("cart", {
-            title: "Desafio 1 Modulo 2 - Carrito de Compras",
+            title: "Practica Integradora 3 - Carrito de Compras",
             product: result
         })
     }).catch(err => {
@@ -138,7 +138,7 @@ router.get('/cart', authMdwFront, async(req, res) => {
 
     cart.getCartProducts(idCart).then(result => {
         res.render("cart", {
-            title: "Desafio 1 Modulo 2 - Carrito de Compras",
+            title: "Practica Integradora 3 - Carrito de Compras",
             product: result,
             total: cartTotal,
             idCart: idCart
@@ -151,13 +151,25 @@ router.get('/cart', authMdwFront, async(req, res) => {
 
 router.get('/login', loggedRedirect, (req, res) => {
         res.render("login", {
-            title: "Desafio 1 Modulo 2 - Login"
+            title: "Practica Integradora 3 - Login"
         })
 })
 
 router.get('/register', loggedRedirect, (req, res) => {
     res.render("register", {
-        title: "Desafio 1 Modulo 2 - Register"
+        title: "Practica Integradora 3 - Register"
+    })
+})
+
+router.get('/forgotpassword', loggedRedirect, (req, res) => {
+    res.render("forgotpassword", {
+        title: "Practica Integradora 3 - Olvide contrasena"
+    })
+})
+
+router.get('/updatepassword', loggedRedirect, (req, res) => {
+    res.render("/updatepassword", {
+        title: "Practica Integradora 3 - Actualizar contrasena"
     })
 })
 

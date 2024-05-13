@@ -34,9 +34,9 @@ router.get(
 
 router.get("/current", passport.authenticate("jwt", { session: false }), currentUserCtrl)
 
-router.put("/resetPassword", forgotPasswordCtrl)
+router.post("/resetpassword", forgotPasswordCtrl)
 
-router.put("/updatePassword/:token", updatePasswordCtrl)
+router.post("/updatepassword/:token", updatePasswordCtrl)
 
 
 
