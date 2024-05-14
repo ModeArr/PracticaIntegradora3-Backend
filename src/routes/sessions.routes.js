@@ -38,6 +38,4 @@ router.post("/resetpassword", forgotPasswordCtrl)
 
 router.post("/updatepassword/:token", updatePasswordCtrl)
 
-
-
 export default router;

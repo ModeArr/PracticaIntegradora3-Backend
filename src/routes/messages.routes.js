@@ -6,6 +6,6 @@ const router = Router()
 
 router.get("/", authMdw(['PUBLIC']), getAllMessagesCtrl)
 
-router.post("/", authMdw(['USER', 'ADMIN']), addMessageCtrl)
+router.post("/", authMdw(['USER', 'ADMIN', 'PREMIUM']), addMessageCtrl)
 
 export default router

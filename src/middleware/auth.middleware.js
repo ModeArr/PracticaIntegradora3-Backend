@@ -1,6 +1,36 @@
 import passport from "passport";
 import { productService } from "../repository/index.js";
 
+function cartMdwPremium(){
+  return (req, res, next) => {
+  
+    passport.authenticate("jwt", { session: false }, (err, userJWT, info) => {
+      const currentRole = userJWT.role
+      const userId = userJWT._id
+      const product = productService.getProductById(req.params.cid)
+      const productIsFromOwner = product.owner === userId
+
+      if (err) {
+        return next(err)
+      }
+
+      if (!userJWT) {
+        return res
+          .status(401)
+          .send({ message: "Acceso denegado. Token inválido o expirado." });
+      }
+
+      if(currentRole === 'PREMIUM' && !productIsFromOwner){
+        return res
+        .status(401)
+        .send({ message: "Acceso denegado. Este producto no te pertenece" });
+      }
+      
+      req.user = userJWT
+      return next()
+    })(req, res, next)
+  }}
+
 function productMdwPremium(){
   return (req, res, next) => {
   
@@ -117,5 +147,6 @@ function authMdwFront(req, res, next) {
   export { authMdwFront,
      loggedRedirect,
      authMdw,
-     productMdwPremium
+     productMdwPremium,
+     cartMdwPremium
     }

@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { authMdw } from "../middleware/auth.middleware.js"
+import { authMdw, cartMdwPremium } from "../middleware/auth.middleware.js"
 import { addCartCtrl,
     getCartProductsCtrl,
     addProductToCartCtrl,
@@ -14,14 +14,14 @@ router.post("/", authMdw(['PUBLIC']), addCartCtrl)
 
 router.get("/:cid", authMdw(['PUBLIC']), getCartProductsCtrl)
 
-router.post("/:cid/product/:pid", authMdw(['USER', 'ADMIN']), addProductToCartCtrl)
+router.post("/:cid/product/:pid", cartMdwPremium, addProductToCartCtrl)
 
-router.delete("/:cid/product/:pid", authMdw(['USER', 'ADMIN']), deleteProductCartCtrl)
+router.delete("/:cid/product/:pid", authMdw(['USER', 'ADMIN', 'PREMIUM']), deleteProductCartCtrl)
 
-router.put("/:cid/product/:pid", authMdw(['USER', 'ADMIN']), editProductQuantityCtrl)
+router.put("/:cid/product/:pid", authMdw(['USER', 'ADMIN', 'PREMIUM']), editProductQuantityCtrl)
 
-router.post("/:cid/purchase", authMdw(['USER', 'ADMIN']), buyCartCtrl)
+router.post("/:cid/purchase", authMdw(['USER', 'ADMIN', 'PREMIUM']), buyCartCtrl)
 
-router.delete("/:cid", authMdw(['USER', 'ADMIN']), deleteAllCartProductsCtrl)
+router.delete("/:cid", authMdw(['USER', 'ADMIN', 'PREMIUM']), deleteAllCartProductsCtrl)
 
 export default router
