@@ -1,4 +1,61 @@
 import passport from "passport";
+import { productService } from "../repository/index.js";
+
+function productMdwPremium(){
+  return (req, res, next) => {
+  
+    passport.authenticate("jwt", { session: false }, (err, userJWT, info) => {
+      const currentRole = userJWT.role
+      const userId = userJWT._id
+      const isUserPremiumAndAdmin = currentRole === 'PREMIUM' || currentRole === "ADMIN"
+      const product = productService.getProductById(req.params.pid)
+      const productIsFromOwner = product.owner === userId
+
+      if (err) {
+        return next(err)
+      }
+
+      if (!userJWT) {
+        return res
+          .status(401)
+          .send({ message: "Acceso denegado. Token inválido o expirado." });
+      }
+
+      if (!isUserPremiumAndAdmin){
+        return res
+        .status(401)
+        .send({ message: "Acceso denegado. No tienes permiso" });
+      }
+
+      if(currentRole === 'PREMIUM' && !productIsFromOwner){
+        return res
+        .status(401)
+        .send({ message: "Acceso denegado. Este producto no te pertenece" });
+      }
+
+      req.user = userJWT
+      return next()
+    })(req, res, next)
+  }}
+  
+  function authMdwFront(req, res, next) {
+      if (!req.signedCookies['jwt']) {
+        return res.redirect("/login")
+      }
+  
+      passport.authenticate("jwt", { session: false }, (err, userJWT, info) => {
+        if (err) {
+          return next(err);
+        }
+        if (!userJWT) {
+          return res
+            .status(401)
+            .send({ message: "Acceso denegado. Token inválido o expirado." });
+        }
+          req.user = userJWT;
+          return next();
+      })(req, res, next);
+}
 
 function authMdw(role) {
   return (req, res, next) => {
@@ -11,7 +68,6 @@ function authMdw(role) {
     if (err) {
       return next(err)
     }
-    console.log(userJWT)
     
     if (!userJWT) {
       return res
@@ -60,5 +116,6 @@ function authMdwFront(req, res, next) {
   
   export { authMdwFront,
      loggedRedirect,
-     authMdw
+     authMdw,
+     productMdwPremium
     }

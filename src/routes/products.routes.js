@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { authMdw } from "../middleware/auth.middleware.js"
+import { authMdw, productMdwPremium } from "../middleware/auth.middleware.js"
 import { getProductsCtrl,
     getProductsByIdCtrl,
     addProductCtrl,
@@ -12,10 +12,10 @@ productsRoutes.get("/", authMdw(['PUBLIC']), getProductsCtrl)
 
 productsRoutes.get("/:pid", authMdw(['PUBLIC']), getProductsByIdCtrl)
 
-productsRoutes.post("/", authMdw(['ADMIN']), addProductCtrl)
+productsRoutes.post("/", authMdw(['ADMIN', 'PREMIUM']), addProductCtrl)
 
-productsRoutes.put("/:pid", authMdw(['ADMIN']), updateProductCtrl)
+productsRoutes.put("/:pid", productMdwPremium, updateProductCtrl)
 
-productsRoutes.delete("/:pid", authMdw(['ADMIN']), deleteProductCtrl)
+productsRoutes.delete("/:pid", productMdwPremium, deleteProductCtrl)
 
 export default productsRoutes

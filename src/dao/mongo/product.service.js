@@ -90,6 +90,10 @@ class ProductService {
                 throw new Error('Ingresa un valor booleano correcto si esta disponible o no a status')
             }
 
+            if (!product.owner.trim()){
+                throw new Error('Ingresa un owner valido')
+            }
+
             let result = await productsModel.create(product).then((res) => {
                 return res
             }).catch((err) => {
