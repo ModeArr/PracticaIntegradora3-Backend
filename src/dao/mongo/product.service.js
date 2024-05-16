@@ -50,7 +50,7 @@ class ProductService {
     }
 
     async addProduct(product) {
-        try {            
+        try {   
             if (!product.title.trim()){
                 throw new Error('Ingresa un titulo de producto correcto')
             }
@@ -107,12 +107,17 @@ class ProductService {
 
     async getProductById(id) {
         try {
-            const productID = await productsModel.find({_id: id})
-            if (!productID) {
-                throw new Error('Producto no encontrado')
-            } else {
-                return productID
-            }
+            const product = await productsModel.find({_id: id}).lean()
+            .then((product) => {
+                if (!product) {
+                    throw new Error('Producto no encontrado')
+                }
+                return product
+            }).catch((err) => {
+                throw new Error(err)
+            })
+
+            return product
         } catch (error) {
             throw Error(error)
         }

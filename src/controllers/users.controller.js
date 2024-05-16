@@ -23,7 +23,7 @@ const loginUserCookieCtrl = async(req, res) => {
       maxAge: 1000 * 60 * 30 // 30 min
     })
   
-    res.redirect('/');
+    res.status(200).json({status: "ok", message: "Ingresaste con exito"});
   }
 
   const currentUserCtrl = async(req, res) => {
@@ -105,7 +105,19 @@ const loginUserCookieCtrl = async(req, res) => {
       return res.status(401).json({error: "Authentication Error"})
     }
 
+  }
 
+  const togglePremiumCtrl = async(req,res) => {
+    userService.togglePremium(req.params.uid)
+    .then(user => {
+      if (user.role === "ADMIN"){
+        res.status(400).json({status: "error", message: "No se puede cambiar el rol de un ADMIN"});
+      }
+      res.status(200).json({status: "ok", message: `El Rol fue cambiado a ${user.role} con exito `});
+      })
+    .catch(err => {
+      res.status(400).json({status: "error", message: err.message});
+    });
   }
 
 export {
@@ -113,5 +125,6 @@ export {
     loginUserCookieCtrl,
     currentUserCtrl,
     forgotPasswordCtrl,
-    updatePasswordCtrl
+    updatePasswordCtrl,
+    togglePremiumCtrl
 }

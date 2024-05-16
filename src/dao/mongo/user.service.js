@@ -136,6 +136,35 @@ class UserManagerService {
         }  
     }
 
+    async togglePremium(uid) {
+        try {
+            return userModels.findByIdAndUpdate(uid, [{
+                $set: {
+                    role: {
+                      $switch: {
+                        branches: [
+                          {
+                            case: { $eq: ["$role", "USER"] },
+                            then: "PREMIUM"
+                          },
+                          {
+                            case: { $eq: ["$role", "PREMIUM"] },
+                            then: "USER"
+                          },
+                          {
+                            case: { $eq: ["$role", "ADMIN"] },
+                            then: "ADMIN"
+                          }
+                        ]
+                      }
+                    }
+                  }
+            }], {new: true}).lean()
+        } catch (error) {
+            throw Error(error)
+        }
+    }
+
 }
 
 export default UserManagerService

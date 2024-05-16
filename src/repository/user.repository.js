@@ -36,4 +36,7 @@ export default class UserRepository {
         return this.dao.checkUserEmail(email)
     }
 
+    togglePremium = async (uid) => {
+        return this.dao.togglePremium(uid)
+    }
 }

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
-import { logoutUserCtrl, loginUserCookieCtrl, currentUserCtrl, forgotPasswordCtrl, updatePasswordCtrl } from "../controllers/users.controller.js";
+import { authMdw } from "../middleware/auth.middleware.js"
+import { logoutUserCtrl, loginUserCookieCtrl, currentUserCtrl, forgotPasswordCtrl, updatePasswordCtrl, togglePremiumCtrl } from "../controllers/users.controller.js";
 
 const router = Router();
 
@@ -37,5 +38,7 @@ router.get("/current", passport.authenticate("jwt", { session: false }), current
 router.post("/resetpassword", forgotPasswordCtrl)
 
 router.post("/updatepassword/:token", updatePasswordCtrl)
+
+router.post("/premium/:uid", authMdw(['ADMIN']), togglePremiumCtrl)
 
 export default router;

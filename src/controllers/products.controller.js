@@ -38,7 +38,8 @@ const getProductsByIdCtrl = async(req, res) => {
 
 const addProductCtrl = async(req, res) => {
     const newProduct = req.body
-    const io = req.app.get('io');
+    const io = req.app.get('io')
+    newProduct.owner = req.user._id
 
     productService.addProduct(newProduct)
         .then(result => {
